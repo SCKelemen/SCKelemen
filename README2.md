@@ -1,0 +1,1 @@
+![test animation](./svg/test2.svg)
