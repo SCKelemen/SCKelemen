@@ -1,3 +1,3 @@
-![test animation](./svg/test.svg)
+![test animation](./github.svg)
 
 ---
