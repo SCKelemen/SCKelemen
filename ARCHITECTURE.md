@@ -1,28 +1,28 @@
 # Data Visualization System Architecture
 
-A modular ecosystem of Go packages for building terminal and web-based data visualizations.
+A modular ecosystem of Go packages for building terminal and web-based data visualizations and sophisticated TUI applications.
 
 ## System Overview
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      Applications                            │
-├─────────────────┬───────────────┬──────────────────────────┤
-│   viz-cli       │   readme      │   clix (external)         │
-│   (terminal)    │   (web/SVG)   │   (TUI framework)         │
-└────────┬────────┴───────┬───────┴──────────────────────────┘
-         │                │
-         ▼                ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Visualization Layer                         │
-├─────────────────────────────────────────────────────────────┤
-│  dataviz - Dual-mode rendering (SVG + Terminal)             │
-│  • Heatmaps, Line Graphs, Bar Charts, Stat Cards            │
-│  • Supports both web and CLI output                         │
-└───────┬─────────────────────────────────────────────────────┘
-        │
-        ├──────────┬─────────────┬────────────┐
-        ▼          ▼             ▼            ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                      Applications                                 │
+├──────────────┬──────────────┬────────────────┬──────────────────┤
+│   viz-cli    │   readme     │   tui          │   clix (ext)      │
+│   (terminal) │   (web/SVG)  │   (framework)  │   (TUI alt)       │
+└──────┬───────┴───────┬──────┴────────┬───────┴──────────────────┘
+       │               │               │
+       ▼               ▼               ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                  Visualization & UI Layer                         │
+├──────────────────────────────────────────────────────────────────┤
+│  dataviz - Dual-mode rendering (SVG + Terminal)                  │
+│  • Heatmaps, Line Graphs, Bar Charts, Stat Cards                 │
+│  • Supports both web and CLI output                              │
+└─────────┬────────────────────────────────────────────────────────┘
+          │
+          ├──────────┬─────────────┬────────────┐
+          ▼          ▼             ▼            ▼
 ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────┐
 │   svg    │ │   cli    │ │  design  │ │   layout     │
 │          │ │          │ │  -system │ │              │
@@ -95,11 +95,53 @@ viz-cli -type line-graph -format svg > output.svg
 
 ---
 
+#### tui
+**Path**: `github.com/SCKelemen/tui`
+**Purpose**: Comprehensive TUI framework for building Claude Code-like CLI experiences
+**Dependencies**: cli, layout, design-system, text, color
+**Status**: Private (Active Development)
+
+**Features**:
+- High-level component system (FileExplorer, CommandPalette, StatusBar, Modal, Tabs)
+- Focus management with Tab/Shift+Tab navigation
+- Keyboard navigation with customizable keymaps
+- Mouse support (click, scroll, drag)
+- Theme integration via design-system
+- Component lifecycle management (Init, Update, View, Focus, Blur)
+
+**Components**:
+- **Application**: Main container with component orchestration
+- **StatusBar**: Bottom bar with status messages and keybindings
+- **FileExplorer**: Tree view with navigation and search (planned)
+- **CommandPalette**: Fuzzy-searchable command launcher (planned)
+- **Editor**: Text viewing/editing with syntax highlighting (planned)
+- **Modal**: Dialog boxes for confirmations and inputs (planned)
+- **Tabs**: Multi-view tab management (planned)
+
+**Example**:
+```go
+app := tui.NewApplication()
+statusBar := tui.NewStatusBar()
+statusBar.SetMessage("Welcome to TUI")
+app.AddComponent(statusBar)
+
+p := tea.NewProgram(app, tea.WithAltScreen())
+p.Run()
+```
+
+**Design Philosophy**:
+- Built on top of cli renderer for low-level primitives
+- Component-based architecture for composability
+- Focus on developer experience and ergonomics
+- Claude Code-inspired UX patterns
+
+---
+
 #### clix (Related)
 **Path**: `github.com/SCKelemen/clix`
 **Purpose**: Terminal UI framework
 **Status**: External/related project
-**Relationship**: Alternative to viz-cli for building TUIs
+**Relationship**: Alternative TUI framework approach
 
 ---
 
@@ -344,6 +386,7 @@ padding := layout.Ch(2) // 2 character widths
 Applications
     viz-cli    → dataviz, design-system, cli, text
     readme     → dataviz, design-system, svg, layout, color
+    tui        → cli, layout, design-system, text, color
 
 Core Libraries
     dataviz    → design-system, svg, cli, color, layout, text
@@ -441,6 +484,10 @@ Visual consistency through centralized theme management.
 **Stack**: dataviz → svg → color
 **Output**: Programmatic SVG generation
 
+### 5. Claude Code-like TUI Applications
+**Stack**: tui → cli → layout + design-system + text
+**Output**: Sophisticated terminal applications with modern UX patterns
+
 ---
 
 ## Development Status
@@ -456,6 +503,7 @@ Visual consistency through centralized theme management.
 | cli | 🚧 Active Development | v0.x |
 | design-system | 🚧 Active Development | v0.x |
 | dataviz | 🚧 Active Development | v0.x |
+| tui | 🚧 Active Development (Private) | v0.x |
 | viz-cli | 🚧 Active Development | v0.x |
 | readme | 🚧 Active Development | v0.x |
 
@@ -539,6 +587,7 @@ All packages are open source. Check individual repositories for specific license
 - **viz-cli**: https://github.com/SCKelemen/viz-cli
 - **dataviz**: https://github.com/SCKelemen/dataviz
 - **cli**: https://github.com/SCKelemen/cli
+- **tui**: https://github.com/SCKelemen/tui (private)
 - **design-system**: https://github.com/SCKelemen/design-system
 
 ---
